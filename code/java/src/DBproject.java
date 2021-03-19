@@ -397,7 +397,6 @@ public class DBproject{
 			String query2 = "SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ";";
 			System.out.println(query2);
 			esql.executeQueryAndPrintResult(query2);
-			//String queryFinal = "SELECT total_seats - ticks_sold = \"Seats Available\" FROM (SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id) total, (SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ")sold;";
 			
 			String queryFinal = " SELECT (SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id) - (SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ");";
 			System.out.println(queryFinal);
