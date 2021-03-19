@@ -298,32 +298,34 @@ public class DBproject{
 	public static void AddShip(DBproject esql) {//1
 		try{
 			System.out.print("Enter ID: ");
-			String idInput = in.readLine();
+			int idInput = Integer.parseInt(in.readLine());
 			System.out.print("Enter make: ");
 			String makeInput = in.readLine();
 			System.out.print("Enter model: ");
 			String modelInput = in.readLine();
 			System.out.print("Enter age: ");
-			String ageInput = in.readLine();
+			int ageInput = Integer.parseInt(in.readLine());
 			System.out.print("Enter seats: ");
-			String seatInput = in.readLine();
-			String query = "INSERT INTO Ship (id, make, model, age, seats) VALUES ('"  + idInput + "', '" + makeInput + "', '" + modelInput + "', '" + ageInput + "', '				 " + seatInput + "');";
-			int rowCount = esql.executeQuery(query);
+			int seatInput = Integer.parseInt(in.readLine());
+			String query = "INSERT INTO Ship (id, make, model, age, seats) VALUES (" + idInput + ", \'" + makeInput + "\', \'" + modelInput + "\', " + ageInput + ", " + seatInput + ");";
+			System.out.println(query);
+			esql.executeUpdate(query);
 		} catch (Exception e) {
-			System.out.println("Error");
+			System.err.println("Error, Ship was not added");
 		}
 	}
 
 	public static void AddCaptain(DBproject esql) {//2
 		try {
 		System.out.print("Enter id: ");
-		String idInput = in.readLine();
+		int idInput = Integer.parseInt(in.readLine());
 		System.out.print("Enter full name: ");
 		String nameInput = in.readLine();
 		System.out.print("Enter nationality: ");
 		String natInput = in.readLine();
-		String query = "INSERT INTO Captain (id, fullname, nationality) VALUES ('" + idInput + "', '" + nameInput + "', '" + natInput + "');";
-		int rowCount = esql.executeQuery(query);
+		String query = "INSERT INTO Captain (id, fullname, nationality) VALUES ('" + idInput + "', \'" + nameInput + "\', \'" + natInput + "\');";
+		System.out.println(query);
+		esql.executeUpdate(query);
 		} catch (Exception e) {
 			System.out.println("Error");
 		}
@@ -332,25 +334,26 @@ public class DBproject{
 	public static void AddCruise(DBproject esql) {//3
 		try {
 			System.out.print("Enter cnum: ");
-			String cnumInput = in.readLine();
+			int cnumInput = Integer.parseInt(in.readLine());
 			System.out.print("Enter cost: ");
-			String costInput = in.readLine();
+			int costInput = Integer.parseInt(in.readLine());
 			System.out.print("Enter num_sold: ");
-			String numSoldInput = in.readLine();
+			int numSoldInput = Integer.parseInt(in.readLine());
 			System.out.print("Enter num_stops: ");
-			String numStopsInput = in.readLine();
-			System.out.print("Enter actual_departure_date: ");
+			int numStopsInput = Integer.parseInt(in.readLine());
+			System.out.print("Enter actual_departure_date (YYYY-MM-DD hh:mm): ");
 			String date1 = in.readLine();
-			System.out.print("Enter actual_arrival_date: ");
+			System.out.print("Enter actual_arrival_date (YYYY-MM-DD hh:mm): ");
 			String date2 = in.readLine();
-			System.out.print("Enter arrival_port: ");
-			String port1 = in.readLine();
-			System.out.print("Enter departure_port: ");
-			String port2 = in.readLine();
-			String query = "INSERT INTO Cruise (cnum, cost, num_sold, num_stops, actual_departure_date, actual_arrival_date, arrival_port, departure_port) VALUES ('" + cnumInput + "', '" + costInput + "', '" + numSoldInput + "', '" + numStopsInput + "', '" + date1 + "', '" + date2 + "', '" + port1 + "', '" + port2 + "');";
-			int rowCount = esql.executeQuery(query); 
+			System.out.print("Enter arrival_port (port code): ");
+			int port1 = Integer.parseInt(in.readLine());
+			System.out.print("Enter departure_port (port code): ");
+			int port2 = Integer.parseInt(in.readLine());
+			String query = "INSERT INTO Cruise (cnum, cost, num_sold, num_stops, actual_departure_date, actual_arrival_date, arrival_port, departure_port) VALUES (" + cnumInput + ", " + costInput + ", " + numSoldInput + ", " + numStopsInput + ", \'" + date1 + "\', \'" + date2 + "', \'" + port1 + "\', \'" + port2 + "\');";
+			System.out.println(query);
+			esql.executeQuery(query); 
 		} catch (Exception e) {
-			System.out.println("Error");
+			System.err.println("Error, cannot add Cruise");
 		}
 	}
 
