@@ -392,18 +392,21 @@ public class DBproject{
                         System.out.print("Enter date (YYYY-MM-DD hh:mm): ");
                         String dateInput = in.readLine();
 			String query = "SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id;";
-			String tempQ = "SELECT COUNT(*) FROM Ship S, CruiseInfo C2 WHERE C2.cruise_id = " + cnumInput + " AND C2.ship_id = S.id;";
-			System.out.println(tempQ);
-			int rowCount = esql.executeQuery(tempQ);
-			System.out.println("rows for temp: " + rowCount);
-			String query2 = "SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ";";
 			System.out.println(query);
-			int rowCount1 = esql.executeQuery(query);
-			System.out.println("rowCount1: " + rowCount1);
+			esql.executeQueryAndPrintResult(query);
+			String query2 = "SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ";";
 			System.out.println(query2);
-			int rowCount2 = esql.executeQuery(query2);
-			System.out.println("rowCount2 : " + rowCount2);
-			System.out.println("Number of seats available: " + (rowCount1 - rowCount2));
+			esql.executeQueryAndPrintResult(query2);
+			//String queryFinal = "SELECT total_seats - ticks_sold = \"Seats Available\" FROM (SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id) total, (SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ")sold;";
+			
+			String queryFinal = " SELECT (SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id) - (SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ");";
+			System.out.println(queryFinal);
+			esql.executeQueryAndPrintResult(queryFinal);
+			//System.out.println("rowCount1: " + rowCount1);
+			//System.out.println(query2);
+			//int rowCount2 = esql.executeQuery(query2);
+			//System.out.println("rowCount2 : " + rowCount2);
+			//System.out.println("Number of seats available: " + (rowCount1 - rowCount2));
 		} catch (Exception e) {
 			System.err.println("Error");
 		}
