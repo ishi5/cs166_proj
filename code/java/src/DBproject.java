@@ -346,12 +346,12 @@ public class DBproject{
 			System.out.print("Enter actual_arrival_date (YYYY-MM-DD hh:mm): ");
 			String date2 = in.readLine();
 			System.out.print("Enter arrival_port (port code): ");
-			int port1 = Integer.parseInt(in.readLine());
+			String port1 = in.readLine();
 			System.out.print("Enter departure_port (port code): ");
-			int port2 = Integer.parseInt(in.readLine());
+			String port2 = in.readLine();
 			String query = "INSERT INTO Cruise (cnum, cost, num_sold, num_stops, actual_departure_date, actual_arrival_date, arrival_port, departure_port) VALUES (" + cnumInput + ", " + costInput + ", " + numSoldInput + ", " + numStopsInput + ", \'" + date1 + "\', \'" + date2 + "', \'" + port1 + "\', \'" + port2 + "\');";
 			System.out.println(query);
-			esql.executeQuery(query); 
+			esql.executeUpdate(query); 
 		} catch (Exception e) {
 			System.err.println("Error, cannot add Cruise");
 		}
@@ -363,24 +363,24 @@ public class DBproject{
 		try {
 			//determine status of reservation
 			System.out.print("Enter customer id: ");
-			String custID = in.readLine();
+			int custID = Integer.parseInt(in.readLine());
 			System.out.print("Enter cnum: ");
-			String cnumInput = in.readLine();
-			String query = "SELECT R.status FROM Reservation R, Customer C WHERE C.id = R.ccid AND C.cnum = R.cid;";
+			int cnumInput = Integer.parseInt(in.readLine());
+			String query = "SELECT R.status FROM Reservation R, Customer C WHERE C.id = " + custID + " AND C.id = R.ccid AND R.cid = " + cnumInput + ";";
+			System.out.println(query);
 			int rowCount = esql.executeQuery(query);
+			System.out.println("If rows = 0, then reservation does not exist.");
+			System.out.println("rows: " + rowCount);
 			//add reservation to database with appropriate status
-			System.out.print("Enter rnum: ");
-			String rnumInput = in.readLine();
-			System.out.print("Enter ccid: ");
-			String ccidInput = in.readLine();
-			System.out.print("Enter cid: ");
-			String cidInput = in.readLine();
+			System.out.print("Enter rnum: "); //reservation number
+			int rnumInput = Integer.parseInt(in.readLine());
 			System.out.print("Enter status: ");
 			String statusInput = in.readLine();
-			String query2 =  "INSERT INTO Reservation (rnum, ccid, cid, status) VALUES ('" + rnumInput + "', '" + ccidInput + "', '" + cidInput + "', '" + statusInput +				 "');";
-			rowCount = esql.executeQuery(query);
+			String query2 =  "INSERT INTO Reservation (rnum, ccid, cid, status) VALUES (" + rnumInput + ", " + custID + ", " + cnumInput + ", '" + statusInput +				 "');";
+			System.out.println(query2);
+			esql.executeUpdate(query2);
 		} catch (Exception e) {
-			System.out.println("Error");
+			System.err.println("Error, cannot book cruise");
 		}
 	}
 
@@ -388,27 +388,34 @@ public class DBproject{
 		// For Cruise number and date, find the number of availalbe seats (i.e. total Ship capacity minus booked seats )
 		try {
 			System.out.print("Enter cnum: ");
-                        String cnumInput = in.readLine();
-                        System.out.print("Enter date: ");
+                        int cnumInput = Integer.parseInt(in.readLine());
+                        System.out.print("Enter date (YYYY-MM-DD hh:mm): ");
                         String dateInput = in.readLine();
-			String query = "SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = " + dateInput + " AND C2.cruise_id = C.cnum AND C2.ship_id = S.id;";
+			String query = "SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id;";
+			String tempQ = "SELECT COUNT(*) FROM Ship S, CruiseInfo C2 WHERE C2.cruise_id = " + cnumInput + " AND C2.ship_id = S.id;";
+			System.out.println(tempQ);
+			int rowCount = esql.executeQuery(tempQ);
+			System.out.println("rows for temp: " + rowCount);
 			String query2 = "SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ";";
+			System.out.println(query);
 			int rowCount1 = esql.executeQuery(query);
+			System.out.println("rowCount1: " + rowCount1);
+			System.out.println(query2);
 			int rowCount2 = esql.executeQuery(query2);
+			System.out.println("rowCount2 : " + rowCount2);
 			System.out.println("Number of seats available: " + (rowCount1 - rowCount2));
 		} catch (Exception e) {
-			System.out.println("Error");
+			System.err.println("Error");
 		}
 	}
 
 	public static void ListsTotalNumberOfRepairsPerShip(DBproject esql) {//6
 		// Count number of repairs per Ships and list them in descending order
 		try {
-			String query = "SELECT R.rid, count(*) FROM Repairs R, Ship S WHERE R.ship_id = S.id GROUP BY rid;";
-			int rowCount = esql.executeQuery(query);
-			System.out.println("Rows: " + rowCount); 
+			String query = "SELECT S.id, count(R.rid) FROM Repairs R, Ship S WHERE R.ship_id = S.id GROUP BY S.id ORDER BY count DESC;";
+			esql.executeQueryAndPrintResult(query); 
 		} catch (Exception e) {
-			System.out.println("Error");
+			System.err.println("Error, could not list total number of repairs per ship");
 		}
 	}
 
@@ -418,16 +425,15 @@ public class DBproject{
 		try {
 			System.out.print("Enter status: ");
 			String input = in.readLine();
-			String query = "SELECT C.cust_id count(*) FROM Customer C, Reservation R WHERE R.status = " + input + " AND R.ccid = C.id;";
-			int rowCount = esql.executeQuery(query);
-			System.out.println("Rows: " + rowCount);
-			System.out.println("Enter cnum: ");
-			String input2 = in.readLine();
-			String query2 = "SELECT C.cust_id count (*) FROM Customer C, Reservation R, Cruise C2 WHERE C2.cnum = " + input2 + " AND R.status = " + input + " AND R.ccid = C.id;";
-			int rowCount2 = esql.executeQuery(query);
-			System.out.println("Rows: " + rowCount2);
+			System.out.print("Enter cnum: ");
+			int input2 = Integer.parseInt(in.readLine());
+			String query2 = "SELECT COUNT(*) FROM Reservation WHERE status = \'" + input + "\' AND cid = " + input2 + ";";
+			System.out.println(query2);
+			//String query2 = "SELECT C.cust_id, count (*) FROM Customer C, Reservation R WHERE C2.cnum = " + input2 + " AND R.status = " + input + " AND R.ccid = C.id;";
+			esql.executeQueryAndPrintResult(query2);
+			//System.out.println("Rows: " + rowCount);
 		} catch (Exception e) {
-			System.out.println("Error");
+			System.err.println("Error, could not find passengers with the given status");
 		}
 	}
 }
