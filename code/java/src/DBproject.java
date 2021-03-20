@@ -297,18 +297,69 @@ public class DBproject{
 
 	public static void AddShip(DBproject esql) {//1
 		try{
-			System.out.print("Enter ID: ");
-			int idInput = Integer.parseInt(in.readLine());
-			System.out.print("Enter make: ");
-			String makeInput = in.readLine();
-			System.out.print("Enter model: ");
-			String modelInput = in.readLine();
-			System.out.print("Enter age: ");
-			int ageInput = Integer.parseInt(in.readLine());
-			System.out.print("Enter seats: ");
-			int seatInput = Integer.parseInt(in.readLine());
+			int idInput;
+			do {
+				System.out.print("Enter ID: ");
+				try{
+					idInput = Integer.parseInt(in.readLine());
+					break;
+				} catch(Exception e){
+					System.out.println("Invalid ID, please try again");
+					continue;
+				}
+			} while (true);
+			String makeInput;
+			do {
+                                System.out.print("Enter make: ");
+                                try{
+                                        makeInput = in.readLine();
+					if(makeInput.length() > 33){
+						throw new RuntimeException("Input given is too long, please try again");
+					}
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid make, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String modelInput;
+			do {
+                                System.out.print("Enter model: ");
+                                try{
+                                        modelInput = in.readLine();
+                                        if(modelInput.length() > 64){
+                                                throw new RuntimeException("Input given is too long, please try again");
+                                        }
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid model, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			int ageInput;
+			do {
+                                System.out.print("Enter age: ");
+                                try{
+                                        ageInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid age, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			int seatInput;
+			do {
+                                System.out.print("Enter seats: ");
+                                try{
+                                        seatInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid seat number, please try again");
+                                        continue;
+                                }
+                        } while (true);
 			String query = "INSERT INTO Ship (id, make, model, age, seats) VALUES (" + idInput + ", \'" + makeInput + "\', \'" + modelInput + "\', " + ageInput + ", " + seatInput + ");";
-			System.out.println(query);
+			//System.out.println(query);
 			esql.executeUpdate(query);
 		} catch (Exception e) {
 			System.err.println("Error, Ship was not added");
@@ -317,17 +368,41 @@ public class DBproject{
 
 	public static void AddCaptain(DBproject esql) {//2
 		try {
-		System.out.print("Enter id: ");
-		int idInput = Integer.parseInt(in.readLine());
-		System.out.print("Enter full name: ");
-		String nameInput = in.readLine();
-		System.out.print("Enter nationality: ");
-		String natInput = in.readLine();
-		String query = "INSERT INTO Captain (id, fullname, nationality) VALUES ('" + idInput + "', \'" + nameInput + "\', \'" + natInput + "\');";
-		System.out.println(query);
+		int idInput;
+		do {                                                                                                                                                                                        System.out.print("Enter ID: ");                                                                                                                                                     try{                                                                                                                                                                                        idInput = Integer.parseInt(in.readLine());                                                                                                                                          break;                                                                                                                                                                      } catch(Exception e){                                                                                                                                                                       System.out.println("Invalid ID, please try again");                                                                                                                                 continue;                                                                                                                                                                   }                                                                                                                                                                           } while (true);
+		String nameInput;
+		do {
+			System.out.println("Enter full name: ");
+			try {
+				nameInput = in.readLine();
+				if(nameInput.length() > 129){
+					throw new RuntimeException("Input is too long, please try again");
+				
+				}
+				break;
+			} catch (Exception e) {
+				System.out.println("Error, please try again");
+				continue;
+			}
+		} while (true);
+		String nationInput;
+		do {
+                        System.out.println("Enter nationality: ");
+                        try {
+                                nationInput = in.readLine();
+                                if(nationInput.length() > 24){
+                                        throw new RuntimeException("Input is too long, please try again");                                                                                                          }
+				break;
+                        } catch (Exception e) {
+                                System.out.println("Error, please try again");
+				continue;
+                       	}
+                } while (true);
+		String query = "INSERT INTO Captain (id, fullname, nationality) VALUES ('" + idInput + "', \'" + nameInput + "\', \'" + nationInput + "\');";
+		//System.out.println(query);
 		esql.executeUpdate(query);
 		} catch (Exception e) {
-			System.out.println("Error");
+			System.err.println("Error, Captain could not be added");
 		}
 	}
 
@@ -350,7 +425,7 @@ public class DBproject{
 			System.out.print("Enter departure_port (port code): ");
 			String port2 = in.readLine();
 			String query = "INSERT INTO Cruise (cnum, cost, num_sold, num_stops, actual_departure_date, actual_arrival_date, arrival_port, departure_port) VALUES (" + cnumInput + ", " + costInput + ", " + numSoldInput + ", " + numStopsInput + ", \'" + date1 + "\', \'" + date2 + "', \'" + port1 + "\', \'" + port2 + "\');";
-			System.out.println(query);
+			//System.out.println(query);
 			esql.executeUpdate(query); 
 		} catch (Exception e) {
 			System.err.println("Error, cannot add Cruise");
@@ -367,7 +442,7 @@ public class DBproject{
 			System.out.print("Enter cnum: ");
 			int cnumInput = Integer.parseInt(in.readLine());
 			String query = "SELECT R.status FROM Reservation R, Customer C WHERE C.id = " + custID + " AND C.id = R.ccid AND R.cid = " + cnumInput + ";";
-			System.out.println(query);
+			//System.out.println(query);
 			int rowCount = esql.executeQuery(query);
 			System.out.println("If rows = 0, then reservation does not exist.");
 			System.out.println("rows: " + rowCount);
@@ -377,7 +452,7 @@ public class DBproject{
 			System.out.print("Enter status: ");
 			String statusInput = in.readLine();
 			String query2 =  "INSERT INTO Reservation (rnum, ccid, cid, status) VALUES (" + rnumInput + ", " + custID + ", " + cnumInput + ", '" + statusInput +				 "');";
-			System.out.println(query2);
+			//System.out.println(query2);
 			esql.executeUpdate(query2);
 		} catch (Exception e) {
 			System.err.println("Error, cannot book cruise");
@@ -391,23 +466,17 @@ public class DBproject{
                         int cnumInput = Integer.parseInt(in.readLine());
                         System.out.print("Enter date (YYYY-MM-DD hh:mm): ");
                         String dateInput = in.readLine();
-			String query = "SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id;";
-			System.out.println(query);
-			esql.executeQueryAndPrintResult(query);
-			String query2 = "SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ";";
-			System.out.println(query2);
-			esql.executeQueryAndPrintResult(query2);
-			
-			String queryFinal = " SELECT (SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id) - (SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ");";
-			System.out.println(queryFinal);
-			esql.executeQueryAndPrintResult(queryFinal);
-			//System.out.println("rowCount1: " + rowCount1);
+			//String query = "SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id;";
+			//System.out.println(query);
+			//esql.executeQueryAndPrintResult(query);
+			//String query2 = "SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ";";
 			//System.out.println(query2);
-			//int rowCount2 = esql.executeQuery(query2);
-			//System.out.println("rowCount2 : " + rowCount2);
-			//System.out.println("Number of seats available: " + (rowCount1 - rowCount2));
+			//esql.executeQueryAndPrintResult(query2);
+			String queryFinal = "SELECT (SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id) - (SELECT C.num_sold FROM Cruise C, CruiseInfo C2 WHERE C.num_sold > 0 AND C2.cruise_id = C.cnum AND C.cnum = " + cnumInput + ");";
+			//System.out.println(queryFinal);
+			esql.executeQueryAndPrintResult(queryFinal);
 		} catch (Exception e) {
-			System.err.println("Error");
+			System.err.println("Error, could not list number of available seats");
 		}
 	}
 
@@ -430,7 +499,7 @@ public class DBproject{
 			System.out.print("Enter cnum: ");
 			int input2 = Integer.parseInt(in.readLine());
 			String query2 = "SELECT COUNT(*) FROM Reservation WHERE status = \'" + input + "\' AND cid = " + input2 + ";";
-			System.out.println(query2);
+			//System.out.println(query2);
 			//String query2 = "SELECT C.cust_id, count (*) FROM Customer C, Reservation R WHERE C2.cnum = " + input2 + " AND R.status = " + input + " AND R.ccid = C.id;";
 			esql.executeQueryAndPrintResult(query2);
 			//System.out.println("Rows: " + rowCount);
