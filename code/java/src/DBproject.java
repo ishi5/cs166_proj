@@ -408,27 +408,115 @@ public class DBproject{
 
 	public static void AddCruise(DBproject esql) {//3
 		try {
-			System.out.print("Enter cnum: ");
-			int cnumInput = Integer.parseInt(in.readLine());
-			System.out.print("Enter cost: ");
-			int costInput = Integer.parseInt(in.readLine());
-			System.out.print("Enter num_sold: ");
-			int numSoldInput = Integer.parseInt(in.readLine());
-			System.out.print("Enter num_stops: ");
-			int numStopsInput = Integer.parseInt(in.readLine());
-			System.out.print("Enter actual_departure_date (YYYY-MM-DD hh:mm): ");
-			String date1 = in.readLine();
-			System.out.print("Enter actual_arrival_date (YYYY-MM-DD hh:mm): ");
-			String date2 = in.readLine();
-			System.out.print("Enter arrival_port (port code): ");
-			String port1 = in.readLine();
-			System.out.print("Enter departure_port (port code): ");
-			String port2 = in.readLine();
-			String query = "INSERT INTO Cruise (cnum, cost, num_sold, num_stops, actual_departure_date, actual_arrival_date, arrival_port, departure_port) VALUES (" + cnumInput + ", " + costInput + ", " + numSoldInput + ", " + numStopsInput + ", \'" + date1 + "\', \'" + date2 + "', \'" + port1 + "\', \'" + port2 + "\');";
+			int cnumInput;
+			do {
+                                System.out.print("Enter cnum: ");
+                                try{
+                                        cnumInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid cnum, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			
+			int costInput;
+			do {
+                                System.out.print("Enter costInput: ");
+                                try{
+                                        costInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid costInput, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			int num_sold;
+			do {
+                                System.out.print("Enter num_sold: ");
+                                try{
+                                        num_sold = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid num_sold, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			int num_stops;
+			do {
+                                System.out.print("Enter num_stops: ");
+                                try{
+                                        num_stops = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid num_stops, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String date1;
+			do {
+				System.out.print("Enter actual_departure_date (YYYY-MM-DD hh:mm): ");
+				try {
+					date1 = in.readLine();			                  	
+                                	if(date1.length() > 16){
+                                        	throw new RuntimeException("Input is too long, please try again");
+			
+					}
+					break;
+                        	} catch (Exception e) {
+                                	System.out.println("Error, please try again");
+					continue;
+                       		}
+                	} while (true);
+			String date2;
+			 do {
+                                System.out.print("Enter actual_arrival_date (YYYY-MM-DD hh:mm): ");
+                                try {
+                                        date2 = in.readLine();
+                                        if(date2.length() > 16){
+                                                throw new RuntimeException("Input is too long, please try again");
+					}
+                                        break;
+                                } catch (Exception e) {
+                                        System.out.println("Error, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String port1;
+			 do {
+                                System.out.print("Enter arrival port: ");
+                                try {
+                                        port1 = in.readLine();
+                                        if(port1.length() > 5){
+                                                throw new RuntimeException("Input is too long, please try again");
+
+                                        }
+                                        break;
+                                } catch (Exception e) {
+                                        System.out.println("Error, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String port2;
+			 do {
+                                System.out.print("Enter departure port: ");
+                                try {
+                                        port2 = in.readLine();
+                                        if(port2.length() > 5){
+                                                throw new RuntimeException("Input is too long, please try again");
+
+                                        }
+                                        break;
+                                } catch (Exception e) {
+                                        System.out.println("Error, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String query = "INSERT INTO Cruise (cnum, cost, num_sold, num_stops, actual_departure_date, actual_arrival_date, arrival_port, departure_port) VALUES (" + cnumInput + ", " + costInput + ", " + num_sold + ", " + num_stops + ", \'" + date1 + "\', \'" + date2 + "', \'" + port1 + "\', \'" + port2 + "\');";
 			//System.out.println(query);
 			esql.executeUpdate(query); 
 		} catch (Exception e) {
-			System.err.println("Error, cannot add Cruise");
+			System.err.println("Error, cannot add Cruise. Check to see if actual arrival and departure date are valid.");
 		}
 	}
 
@@ -437,20 +525,60 @@ public class DBproject{
 		// Given a customer and a Cruise that he/she wants to book, add a reservation to the DB
 		try {
 			//determine status of reservation
-			System.out.print("Enter customer id: ");
-			int custID = Integer.parseInt(in.readLine());
-			System.out.print("Enter cnum: ");
-			int cnumInput = Integer.parseInt(in.readLine());
+			int custID;
+                        do {
+                                System.out.print("Enter custID: ");
+                                try{
+                                        custID = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid custID, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			int cnumInput;
+                        do {
+                                System.out.print("Enter cnumInput: ");
+                                try{
+                                        cnumInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid cnumInput, please try again");
+                                        continue;
+                                }
+                        } while (true);
 			String query = "SELECT R.status FROM Reservation R, Customer C WHERE C.id = " + custID + " AND C.id = R.ccid AND R.cid = " + cnumInput + ";";
 			//System.out.println(query);
 			int rowCount = esql.executeQuery(query);
 			System.out.println("If rows = 0, then reservation does not exist.");
 			System.out.println("rows: " + rowCount);
 			//add reservation to database with appropriate status
-			System.out.print("Enter rnum: "); //reservation number
-			int rnumInput = Integer.parseInt(in.readLine());
-			System.out.print("Enter status: ");
-			String statusInput = in.readLine();
+			int rnumInput;
+			do {
+                                System.out.print("Enter rnumInput: ");
+                                try{
+                                        rnumInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid rnumInput, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String statusInput;
+                         do {
+                                System.out.print("Enter status: ");
+                                try {
+                                        statusInput = in.readLine();
+                                        if(statusInput.length() > 1 || (statusInput != "W" && statusInput != "R" && statusInput != "C")){
+                                                throw new RuntimeException("Input is too long, please try again");
+
+                                        }
+                                        break;
+                                } catch (Exception e) {
+                                        System.out.println("Error, please try again");
+                                        continue;
+                                }
+                        } while (true);
 			String query2 =  "INSERT INTO Reservation (rnum, ccid, cid, status) VALUES (" + rnumInput + ", " + custID + ", " + cnumInput + ", '" + statusInput +				 "');";
 			//System.out.println(query2);
 			esql.executeUpdate(query2);
@@ -462,10 +590,33 @@ public class DBproject{
 	public static void ListNumberOfAvailableSeats(DBproject esql) {//5
 		// For Cruise number and date, find the number of availalbe seats (i.e. total Ship capacity minus booked seats )
 		try {
-			System.out.print("Enter cnum: ");
-                        int cnumInput = Integer.parseInt(in.readLine());
-                        System.out.print("Enter date (YYYY-MM-DD hh:mm): ");
-                        String dateInput = in.readLine();
+			int cnumInput;
+                        do {
+                                System.out.print("Enter cnumInput: ");
+                                try{
+                                        cnumInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid cnumInput, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String dateInput;
+                         do {
+                                System.out.print("Enter date (YYYY-MM-DD hh:mm): ");
+                                try {
+                                        dateInput = in.readLine();
+                                        if(dateInput.length() > 16){
+                                                throw new RuntimeException("Input is too long, please try again");
+
+                                        }
+                                        break;
+                                } catch (Exception e) {
+                                        System.out.println("Error, please try again");
+                                        continue;
+                                }
+                        } while (true);
+                        
 			//String query = "SELECT S.seats FROM Ship S, Cruise C, CruiseInfo C2 WHERE C.cnum = " + cnumInput + "  AND C.actual_departure_date = \'" + dateInput + "\' AND C2.cruise_id = C.cnum AND C2.ship_id = S.id;";
 			//System.out.println(query);
 			//esql.executeQueryAndPrintResult(query);
@@ -494,11 +645,33 @@ public class DBproject{
 	public static void FindPassengersCountWithStatus(DBproject esql) {//7
 		// Find how many passengers there are with a status (i.e. W,C,R) and list that number.
 		try {
-			System.out.print("Enter status: ");
-			String input = in.readLine();
-			System.out.print("Enter cnum: ");
-			int input2 = Integer.parseInt(in.readLine());
-			String query2 = "SELECT COUNT(*) FROM Reservation WHERE status = \'" + input + "\' AND cid = " + input2 + ";";
+			String statusInput;
+                         do {
+                                System.out.print("Enter status: ");
+                                try {
+                                        statusInput = in.readLine();
+                                        if(!statusInput.equals("W") && !statusInput.equals("R") && !statusInput.equals("C")){
+                                                throw new RuntimeException("Input is invalid, please try again");
+
+                                        }
+                                        break;
+                                } catch (Exception e) {
+                                        System.out.println("Error, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			int cnumInput;
+                        do {
+                                System.out.print("Enter cnumInput: ");
+                                try{
+                                        cnumInput = Integer.parseInt(in.readLine());
+                                        break;
+                                } catch(Exception e){
+                                        System.out.println("Invalid cnumInput, please try again");
+                                        continue;
+                                }
+                        } while (true);
+			String query2 = "SELECT COUNT(*) FROM Reservation WHERE status = \'" + statusInput + "\' AND cid = " + cnumInput + ";";
 			//System.out.println(query2);
 			//String query2 = "SELECT C.cust_id, count (*) FROM Customer C, Reservation R WHERE C2.cnum = " + input2 + " AND R.status = " + input + " AND R.ccid = C.id;";
 			esql.executeQueryAndPrintResult(query2);
