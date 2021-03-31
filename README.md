@@ -1,4 +1,4 @@
-# CS166 Project
+# CS166 Database Project
 ## Ishani Tyagi and Ashley Antony 
 ### SUMMARY: 
 ##### This is a simple database of information related to Cruises (including Captain, Customer, Reservation, Ship, Repairs, CruiseInfo, Schedule, and Technician).
